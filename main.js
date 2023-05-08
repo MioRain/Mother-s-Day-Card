@@ -164,24 +164,71 @@ function createEnvelope() {
   scene.add(envelopeObj.envelope)
 }
 
-function addEnvText() {
+function addText() {
   // 加入字體
   const loader = new THREE.FontLoader()
   loader.load(
     './src/font/ZhunYuan_ZhunYuan.json',
     function (font) {
-      const textGeo = new THREE.TextGeometry(`Dear Mom`, {
+      const envTextGeo = new THREE.TextGeometry(`Dear Mom`, {
         font: font,
         size: 3.2,
         height: 0.01,
         curveSegments: 12,
         bevelEnabled: false
       })
-      const textMat = new THREE.MeshBasicMaterial({ color: 0x22cc77 })
-      const text = new THREE.Mesh(textGeo, textMat)
-      text.position.set(10, -1, -0.06)
-      text.rotation.y = 1 * Math.PI
-      envelopeObj.envelope.add(text)
+      const envTextMat = new THREE.MeshBasicMaterial({ color: 0x22cc77 })
+      const envText = new THREE.Mesh(envTextGeo, envTextMat)
+      envText.position.set(10, -1, -0.06)
+      envText.rotation.y = 1 * Math.PI
+      envelopeObj.envelope.add(envText)
+
+      const letterTextGeo1 = new THREE.TextGeometry(
+        `母 親 節 \n       快 樂`,
+        {
+          font: font,
+          size: 1.6,
+          height: 0.01,
+          curveSegments: 12,
+          bevelEnabled: false
+        })
+      const letterTextMat1 = new THREE.MeshBasicMaterial({ color: 0xcc2277 })
+      const letterText1 = new THREE.Mesh(letterTextGeo1, letterTextMat1)
+      letterText1.position.set(-11, 0, 0.05)
+      letterText1.rotation.z = 0.2 * Math.PI
+      envelopeObj.letter.add(letterText1)
+
+      const letterTextGeo2 = new THREE.TextGeometry(
+        `
+        這 次 我 跟 姐 姐
+        準 備 了 禮 物 給 你
+        但 是 被 藏 起 來 囉
+        要 自 己 去 找 哦 ～
+        — 提 示 在 下 面 —
+        `,
+        {
+          font: font,
+          size: 1,
+          height: 0.01,
+          curveSegments: 12,
+          bevelEnabled: false
+        })
+      const letterTextMat2 = new THREE.MeshBasicMaterial({ color: 0x5570ee })
+      const letterText2 = new THREE.Mesh(letterTextGeo2, letterTextMat2)
+      letterText2.position.set(-3, 7.5, 0.05)
+      envelopeObj.letter.add(letterText2)
+
+      const letterTextGeo3 = new THREE.TextGeometry(`跟 隨 木 觀 音 的 背 影 吧`,{
+          font: font,
+          size: 1.6,
+          height: 0.01,
+          curveSegments: 1,
+          bevelEnabled: false
+        })
+      const letterTextMat3 = new THREE.MeshBasicMaterial({ color: 0xca6702 })
+      const letterText3 = new THREE.Mesh(letterTextGeo3, letterTextMat3)
+      letterText3.position.set(-12, -5.5, 0.05)
+      envelopeObj.letter.add(letterText3)
     }
   )
 }
@@ -195,4 +242,4 @@ window.addEventListener('resize', () => {
 init()
 render()
 createEnvelope()
-addEnvText()
+addText()

@@ -1,3 +1,4 @@
+let container = document.querySelector('.container')
 let scene, camera, renderer
 let cameraControl
 let envelopeObj
@@ -15,18 +16,21 @@ function init() {
   camera.lookAt(scene.position)
   scene.add(camera)
 
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5)
+  directionalLight.position.set(30, 20, 40)
+  scene.add(directionalLight)
+
   const axes = new THREE.AxesHelper(20)
   scene.add(axes)
 
   renderer = new THREE.WebGLRenderer({ antialias: true })
   renderer.setSize(window.innerWidth, window.innerHeight)
-  renderer.setClearColor(0xffffff, 0.1)
 
   cameraControl = new THREE.OrbitControls(camera, renderer.domElement)
   cameraControl.enableDamping = true
   cameraControl.dampingFactor = 0.05
 
-  document.body.append(renderer.domElement)
+  container.append(renderer.domElement)
 }
 
 function render() {
@@ -51,19 +55,19 @@ class Envelope {
     const stickerMap = new THREE.TextureLoader().load(
       './src/img/nue.png'
     )
-    const envMat = new THREE.MeshBasicMaterial({
+    const envMat = new THREE.MeshStandardMaterial({
       side: THREE.DoubleSide,
       map: envMap
     })
-    const envBodyMat = new THREE.MeshBasicMaterial({
+    const envBodyMat = new THREE.MeshStandardMaterial({
       side: THREE.DoubleSide,
       map: envBodyMap
     })
-    const letterMat = new THREE.MeshBasicMaterial({
+    const letterMat = new THREE.MeshStandardMaterial({
       side: THREE.DoubleSide,
       map: letterMap
     })
-    const stickerMat = new THREE.MeshBasicMaterial({
+    const stickerMat = new THREE.MeshStandardMaterial({
       side: THREE.DoubleSide,
       map: stickerMap
     })
@@ -193,7 +197,7 @@ function addText() {
         curveSegments: 12,
         bevelEnabled: false
       })
-      const envTextMat = new THREE.MeshBasicMaterial({ color: 0x22cc77 })
+      const envTextMat = new THREE.MeshStandardMaterial({ color: 0x22cc77 })
       const envText = new THREE.Mesh(envTextGeo, envTextMat)
       envText.position.set(10, -1, -0.06)
       envText.rotation.y = 1 * Math.PI
@@ -208,7 +212,7 @@ function addText() {
           curveSegments: 12,
           bevelEnabled: false
         })
-      const letterTextMat1 = new THREE.MeshBasicMaterial({ color: 0xcc2277 })
+      const letterTextMat1 = new THREE.MeshStandardMaterial({ color: 0xcc2277 })
       const letterText1 = new THREE.Mesh(letterTextGeo1, letterTextMat1)
       letterText1.position.set(-11, 0, 0.05)
       letterText1.rotation.z = 0.2 * Math.PI
@@ -229,7 +233,7 @@ function addText() {
           curveSegments: 12,
           bevelEnabled: false
         })
-      const letterTextMat2 = new THREE.MeshBasicMaterial({ color: 0x5570ee })
+      const letterTextMat2 = new THREE.MeshStandardMaterial({ color: 0x5570ee })
       const letterText2 = new THREE.Mesh(letterTextGeo2, letterTextMat2)
       letterText2.position.set(-3, 7.5, 0.05)
       envelopeObj.letter.add(letterText2)
@@ -241,7 +245,7 @@ function addText() {
         curveSegments: 1,
         bevelEnabled: false
       })
-      const letterTextMat3 = new THREE.MeshBasicMaterial({ color: 0xca6702 })
+      const letterTextMat3 = new THREE.MeshStandardMaterial({ color: 0xca6702 })
       const letterText3 = new THREE.Mesh(letterTextGeo3, letterTextMat3)
       letterText3.position.set(-12, -5.5, 0.05)
       envelopeObj.letter.add(letterText3)

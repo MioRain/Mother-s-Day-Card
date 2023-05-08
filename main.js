@@ -1,8 +1,9 @@
-let container = document.querySelector('.container')
+let canvas = document.querySelector('.canvas')
+let h1 = document.querySelector('h1')
 let scene, camera, renderer
-let cameraControl
+let directionalLight
 let envelopeObj
-let animationStep = 'start'
+let animationStep = ''
 
 function init() {
   scene = new THREE.Scene()
@@ -16,21 +17,14 @@ function init() {
   camera.lookAt(scene.position)
   scene.add(camera)
 
-  const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5)
+  directionalLight = new THREE.DirectionalLight(0xffffff, 0)
   directionalLight.position.set(30, 20, 40)
   scene.add(directionalLight)
-
-  const axes = new THREE.AxesHelper(20)
-  scene.add(axes)
 
   renderer = new THREE.WebGLRenderer({ antialias: true })
   renderer.setSize(window.innerWidth, window.innerHeight)
 
-  cameraControl = new THREE.OrbitControls(camera, renderer.domElement)
-  cameraControl.enableDamping = true
-  cameraControl.dampingFactor = 0.05
-
-  container.append(renderer.domElement)
+  canvas.append(renderer.domElement)
 }
 
 function render() {
@@ -299,12 +293,26 @@ window.addEventListener('resize', () => {
   renderer.setSize(window.innerWidth, window.innerHeight)
 })
 
-window.addEventListener('touchend', () => {
+canvas.addEventListener('touchend', () => {
   envAnimation()
 })
 
-window.addEventListener('click', () => {
+canvas.addEventListener('click', () => {
   envAnimation()
+})
+
+h1.addEventListener('click', () => {
+  h1.style.display = 'none'
+  canvas.style.display = 'block'
+  setTimeout(() => {
+    const light = setInterval(() => {
+      directionalLight.intensity += 0.013
+    }, 30)
+    setTimeout(() => {
+      animationStep = 'start'
+      clearInterval(light)
+    }, 3000)
+  }, 1000)
 })
 
 init()

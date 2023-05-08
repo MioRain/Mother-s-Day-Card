@@ -1,6 +1,7 @@
 let scene, camera, renderer
 let cameraControl
 let envelopeObj
+let animationStep = 'start'
 
 function init() {
   scene = new THREE.Scene()
@@ -13,9 +14,6 @@ function init() {
   camera.position.set(0, 0, 50)
   camera.lookAt(scene.position)
   scene.add(camera)
-
-  const axes = new THREE.AxesHelper(20)
-  scene.add(axes)
 
   renderer = new THREE.WebGLRenderer({ antialias: true })
   renderer.setSize(window.innerWidth, window.innerHeight)
@@ -138,8 +136,8 @@ class Envelope {
     this.envBodyTop1.add(this.envBodyTop2)
     this.rotateGroup.add(this.envBodyTop1)
     this.rotateGroup.position.y = 9.95
-    // this.rotateGroup.rotation.x = 0.5 * Math.PI
-    // this.envBodyTop2.rotation.x = 0.5 * Math.PI
+    this.rotateGroup.rotation.x = 0.5 * Math.PI
+    this.envBodyTop2.rotation.x = 0.5 * Math.PI
 
     const letterGeo = new THREE.BoxGeometry(28, 18, 0.1)
     this.letter = new THREE.Mesh(letterGeo, letterMat)
@@ -156,6 +154,8 @@ class Envelope {
       this.rotateGroup,
       this.letter
     )
+
+    this.envelope.rotation.y = -0.85 * Math.PI
   }
 }
 
@@ -200,12 +200,12 @@ function addText() {
 
       const letterTextGeo2 = new THREE.TextGeometry(
         `
-        這 次 我 跟 姐 姐
-        準 備 了 禮 物 給 你
-        但 是 被 藏 起 來 囉
-        要 自 己 去 找 哦 ～
-        — 提 示 在 下 面 —
-        `,
+          這 次 我 跟 姐 姐
+          準 備 了 禮 物 給 你
+          但 是 被 藏 起 來 囉
+          要 自 己 去 找 哦 ～
+          — 提 示 在 下 面 —
+          `,
         {
           font: font,
           size: 1,
@@ -218,13 +218,13 @@ function addText() {
       letterText2.position.set(-3, 7.5, 0.05)
       envelopeObj.letter.add(letterText2)
 
-      const letterTextGeo3 = new THREE.TextGeometry(`跟 隨 木 觀 音 的 背 影 吧`,{
-          font: font,
-          size: 1.6,
-          height: 0.01,
-          curveSegments: 1,
-          bevelEnabled: false
-        })
+      const letterTextGeo3 = new THREE.TextGeometry(`跟 隨 木 觀 音 的 背 影 吧`, {
+        font: font,
+        size: 1.6,
+        height: 0.01,
+        curveSegments: 1,
+        bevelEnabled: false
+      })
       const letterTextMat3 = new THREE.MeshBasicMaterial({ color: 0xca6702 })
       const letterText3 = new THREE.Mesh(letterTextGeo3, letterTextMat3)
       letterText3.position.set(-12, -5.5, 0.05)
@@ -233,10 +233,58 @@ function addText() {
   )
 }
 
+function envAnimation() {
+  switch (animationStep) {
+    case 'start':
+      const loop1 = setInterval(() => {
+        if (envelopeObj.envelope.rotation.y < 0) {
+          envelopeObj.envelope.rotation.y += 0.05
+          animationStep = 'open'
+        } else {
+          clearInterval(loop1)
+        }
+      }, 15)
+      break
+    case 'open':
+      if (envelopeObj.envelope.rotation.y >= 0) {
+        const loop2 = setInterval(() => {
+          if (envelopeObj.rotateGroup.rotation.x > 0) {
+            envelopeObj.rotateGroup.rotation.x -= 0.1
+          } else if (envelopeObj.envBodyTop2.rotation.x > 0) {
+            envelopeObj.envBodyTop2.rotation.x -= 0.1
+          } else {
+            clearInterval(loop2)
+            animationStep = 'takeOutCard'
+          }
+        }, 30)
+      }
+      break
+    case 'takeOutCard':
+      const loop3 = setInterval(() => {
+        if (envelopeObj.letter.position.y <= 100) {
+          envelopeObj.letter.position.y += 1.5
+          camera.position.y += 1.5
+        } else {
+          clearInterval(loop3)
+          animationStep = 'end'
+        }
+      }, 30)
+      break
+  }
+}
+
 window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight
   camera.updateProjectionMatrix()
   renderer.setSize(window.innerWidth, window.innerHeight)
+})
+
+window.addEventListener('touchend', () => {
+  envAnimation()
+})
+
+window.addEventListener('click', () => {
+  envAnimation()
 })
 
 init()

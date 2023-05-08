@@ -15,9 +15,12 @@ function init() {
   camera.lookAt(scene.position)
   scene.add(camera)
 
+  const axes = new THREE.AxesHelper(20)
+  scene.add(axes)
+
   renderer = new THREE.WebGLRenderer({ antialias: true })
   renderer.setSize(window.innerWidth, window.innerHeight)
-  renderer.setClearColor(0xffffff, 0.1);
+  renderer.setClearColor(0xffffff, 0.1)
 
   cameraControl = new THREE.OrbitControls(camera, renderer.domElement)
   cameraControl.enableDamping = true
@@ -40,10 +43,13 @@ class Envelope {
     const envBodyMap = new THREE.TextureLoader().load(
       './src/img/paper_texture.jpg'
     )
-    envMap.wrapS = envMap.wrapT = THREE.RepeatWrapping;
-    envMap.repeat.set(0.03, 0.07);
+    envMap.wrapS = envMap.wrapT = THREE.RepeatWrapping
+    envMap.repeat.set(0.03, 0.07)
     const letterMap = new THREE.TextureLoader().load(
       './src/img/letter_texture.jpg'
+    )
+    const stickerMap = new THREE.TextureLoader().load(
+      './src/img/nue.png'
     )
     const envMat = new THREE.MeshBasicMaterial({
       side: THREE.DoubleSide,
@@ -56,6 +62,10 @@ class Envelope {
     const letterMat = new THREE.MeshBasicMaterial({
       side: THREE.DoubleSide,
       map: letterMap
+    })
+    const stickerMat = new THREE.MeshBasicMaterial({
+      side: THREE.DoubleSide,
+      map: stickerMap
     })
 
     // 信封結構
@@ -143,6 +153,12 @@ class Envelope {
     this.letter = new THREE.Mesh(letterGeo, letterMat)
     this.letter.position.z = 0.1
 
+    const stickerGeo = new THREE.CircleGeometry(3, 32)
+    this.sticker = new THREE.Mesh(stickerGeo, stickerMat)
+    this.sticker.position.set(0, 14, -0.01)
+    this.sticker.rotation.z = 1 * Math.PI
+    this.envBodyTop2.add(this.sticker)
+
     this.envelope.add(
       this.envBody,
       this.envBodyLeft1,
@@ -152,7 +168,7 @@ class Envelope {
       this.envBodyBottom1,
       this.envBodyBottom2,
       this.rotateGroup,
-      this.letter
+      this.letter,
     )
 
     this.envelope.rotation.y = -0.85 * Math.PI

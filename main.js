@@ -37,15 +37,15 @@ class Envelope {
   constructor() {
     // 材質、紋理設定
     const envMap = new THREE.TextureLoader().load(
-      './paper_texture.jpg'
+      './src/img/paper_texture.jpg'
     )
     const envBodyMap = new THREE.TextureLoader().load(
-      './paper_texture.jpg'
+      './src/img/paper_texture.jpg'
     )
     envMap.wrapS = envMap.wrapT = THREE.RepeatWrapping;
     envMap.repeat.set(0.03, 0.07);
     const letterMap = new THREE.TextureLoader().load(
-      './letter_texture.jpg'
+      './src/img/letter_texture.jpg'
     )
     const envMat = new THREE.MeshBasicMaterial({
       side: THREE.DoubleSide,
@@ -141,7 +141,6 @@ class Envelope {
     // this.rotateGroup.rotation.x = 0.5 * Math.PI
     // this.envBodyTop2.rotation.x = 0.5 * Math.PI
 
-
     const letterGeo = new THREE.BoxGeometry(28, 18, 0.1)
     this.letter = new THREE.Mesh(letterGeo, letterMat)
     this.letter.position.z = 0.1
@@ -165,6 +164,28 @@ function createEnvelope() {
   scene.add(envelopeObj.envelope)
 }
 
+function addEnvText() {
+  // 加入字體
+  const loader = new THREE.FontLoader()
+  loader.load(
+    './src/font/ZhunYuan_ZhunYuan.json',
+    function (font) {
+      const textGeo = new THREE.TextGeometry(`Dear Mom`, {
+        font: font,
+        size: 3.2,
+        height: 0.01,
+        curveSegments: 12,
+        bevelEnabled: false
+      })
+      const textMat = new THREE.MeshBasicMaterial({ color: 0x22cc77 })
+      const text = new THREE.Mesh(textGeo, textMat)
+      text.position.set(10, -1, -0.06)
+      text.rotation.y = 1 * Math.PI
+      envelopeObj.envelope.add(text)
+    }
+  )
+}
+
 window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight
   camera.updateProjectionMatrix()
@@ -174,3 +195,4 @@ window.addEventListener('resize', () => {
 init()
 render()
 createEnvelope()
+addEnvText()

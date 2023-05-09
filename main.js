@@ -182,7 +182,7 @@ function addText() {
   // 加入字體
   const loader = new THREE.FontLoader()
   loader.load(
-    './src/font/ZhunYuan_ZhunYuan.json',
+    './src/font/FZLanTingHei-DB-GBK_Regular.json',
     function (font) {
       const envTextGeo = new THREE.TextGeometry(`Dear Mom`, {
         font: font,

@@ -193,7 +193,7 @@ function addText() {
       })
       const envTextMat = new THREE.MeshStandardMaterial({ color: 0x22cc77 })
       const envText = new THREE.Mesh(envTextGeo, envTextMat)
-      envText.position.set(10, -1, -0.06)
+      envText.position.set(12, -1, -0.06)
       envText.rotation.y = 1 * Math.PI
       envelopeObj.envelope.add(envText)
 
